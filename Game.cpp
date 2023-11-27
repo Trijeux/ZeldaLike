@@ -72,202 +72,6 @@ Game::Game()
 
 }
 
-void Game::Move()
-{
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	{
-		if (no_pressed)
-		{
-			tile_player_Coord.x += 1;
-			no_pressed = false;
-		}
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		if (no_pressed)
-		{
-			tile_player_Coord.x -= 1;
-			no_pressed = false;
-		}
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		if (no_pressed)
-		{
-			tile_player_Coord.y -= 1;
-			no_pressed = false;
-		}
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-	{
-		if (no_pressed)
-		{
-			tile_player_Coord.y += 1;
-			no_pressed = false;
-		}
-	}
-	else
-	{
-		no_pressed = true;
-	}
-}
-
-void Game::Collision()
-{
-	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > BLOCK_DISPLAY || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > BLOCK_DISPLAY || tilemap[tile_player_Coord.x + tile_player_Coord.y * BLOCK_DISPLAY] == mur || tilemap[tile_player_Coord.x + tile_player_Coord.y * BLOCK_DISPLAY] == porte_fermé || tilemap[tile_player_Coord.x + tile_player_Coord.y * BLOCK_DISPLAY] == exit_porte_fermé)
-	{
-		tile_player_Coord = prev_player_coords;
-	}
-	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > BLOCK_DISPLAY || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > BLOCK_DISPLAY || tilemap[tile_player_Coord.x + tile_player_Coord.y * BLOCK_DISPLAY] == piège || tilemap[tile_player_Coord.x + tile_player_Coord.y * BLOCK_DISPLAY] == piège_invisible)
-	{
-		level = 1;
-		num_clé = 0;
-		vie -= 1;
-		tile_player_Coord = spawn;
-		chargement = true;
-	}
-	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > BLOCK_DISPLAY || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > BLOCK_DISPLAY || tilemap[tile_player_Coord.x + tile_player_Coord.y * BLOCK_DISPLAY] == clé)
-	{
-		num_clé += 1;
-		tilemap[tile_player_Coord.y * TILEMAP_WIDTH + tile_player_Coord.x] = sole;
-	}
-	if (num_clé == 1 && level == 2)
-	{
-		tilemap[9 * TILEMAP_WIDTH + 19] = porte_ouverte;
-		tilemap[10 * TILEMAP_WIDTH + 19] = porte_ouverte;
-		tilemap[7 * TILEMAP_WIDTH + 1] = sole;
-	}
-	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > BLOCK_DISPLAY || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > BLOCK_DISPLAY || tilemap[tile_player_Coord.x + tile_player_Coord.y * BLOCK_DISPLAY] == exit_clé)
-	{
-		num_exit_clé += 1;
-		tilemap[tile_player_Coord.y * TILEMAP_WIDTH + tile_player_Coord.x] = sole;
-	}
-	if (num_exit_clé == 1 && level == 3)
-	{
-		tilemap[7 * TILEMAP_WIDTH + 1] = sole;
-	}
-	if (num_exit_clé == 1 && level == 1)
-	{
-		tilemap[9 * TILEMAP_WIDTH + 0] = exit_porte_ouverte;
-		tilemap[10 * TILEMAP_WIDTH + 0] = exit_porte_ouverte;
-	}
-}
-
-void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit_clé_player)
-{
-	window.clear(sf::Color::Black);
-
-	if ((tile_player_Coord.x == 19 && tile_player_Coord.y == 9) || (tile_player_Coord.x == 19 && tile_player_Coord.y == 10))
-	{
-		tile_player_Coord.x = 1;
-		level += 1;
-		chargement = true;
-	}
-
-	else if (((tile_player_Coord.x == 0 && tile_player_Coord.y == 9) || (tile_player_Coord.x == 0 && tile_player_Coord.y == 10)) && level != 1)
-	{
-		tile_player_Coord.x = 18;
-		level -= 1;
-		chargement = true;
-	}
-	else if ((tile_player_Coord.x == 0 && tile_player_Coord.y == 9 || tile_player_Coord.x == 0 && tile_player_Coord.y == 10) && level == 1)
-	{
-		endgame = true;
-	}
-
-	for (int y = 0; y < BLOCK_DISPLAY; y++)
-	{
-
-		for (int x = 0; x < BLOCK_DISPLAY; x++)
-		{
-			Sole.setPosition(50 * x, 50 * y);
-			window.draw(Sole);
-
-			if (tilemap[x + y * BLOCK_DISPLAY] == mur)
-			{
-				Mur.setPosition(50 * x, 50 * y);
-				window.draw(Mur);
-			}
-			else if (tilemap[x + y * BLOCK_DISPLAY] == piège)
-			{
-				Piège.setPosition(50 * x, 50 * y);
-				window.draw(Piège);
-			}
-			else if (tilemap[x + y * BLOCK_DISPLAY] == piège_invisible)
-			{
-				Piège_Invisible.setPosition(50 * x, 50 * y);
-				window.draw(Piège_Invisible);
-			}
-			else if (tilemap[x + y * BLOCK_DISPLAY] == clé)
-			{
-				Clé.setPosition(50 * x, 50 * y);
-				window.draw(Clé);
-			}
-			else if (tilemap[x + y * BLOCK_DISPLAY] == exit_clé)
-			{
-				Exit_Clé.setPosition(50 * x, 50 * y);
-				window.draw(Exit_Clé);
-			}
-			else if (tilemap[x + y * BLOCK_DISPLAY] == porte_fermé)
-			{
-				Porte_Fermé.setPosition(50 * x, 50 * y);
-				window.draw(Porte_Fermé);
-			}
-			else if (tilemap[x + y * BLOCK_DISPLAY] == porte_ouverte)
-			{
-				Porte_Ouverte.setPosition(50 * x, 50 * y);
-				window.draw(Porte_Ouverte);
-			}
-			else if (tilemap[x + y * BLOCK_DISPLAY] == exit_porte_fermé)
-			{
-				Exit_Porte_Fermé.setPosition(50 * x, 50 * y);
-				window.draw(Exit_Porte_Fermé);
-			}
-			else if (tilemap[x + y * BLOCK_DISPLAY] == exit_porte_ouverte)
-			{
-				Exit_Porte_Ouverte.setPosition(50 * x, 50 * y);
-				window.draw(Exit_Porte_Ouverte);
-			}
-		}
-	}
-
-	window.draw(tile_player);
-
-	vie_player.Draw(window);
-	clé_player.Draw(window);
-	exit_clé_player.Draw(window);
-}
-
-void Game::GraphicEndGame(GameText gameover, GameText victory, GameText Enter)
-{
-	if (vie <= 0)
-	{
-		window.clear(sf::Color::Black);
-		gameover.Draw(window);
-		Enter.Draw(window);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
-		{
-			if (no_pressed)
-			{
-				window.close();
-			}
-		}
-	}
-	else if (endgame)
-	{
-		window.clear(sf::Color::Black);
-		victory.Draw(window);
-		Enter.Draw(window);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
-		{
-			if (no_pressed)
-			{
-				window.close();
-			}
-		}
-	}
-}
-
 void Game::GameLoop()
 {
 
@@ -334,6 +138,202 @@ void Game::GameLoop()
 		GraphicEndGame(gameover, victory, Enter);
 
 		window.display();
+	}
+}
+
+void Game::Move()
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	{
+		if (no_pressed)
+		{
+			tile_player_Coord.x += 1;
+			no_pressed = false;
+		}
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		if (no_pressed)
+		{
+			tile_player_Coord.x -= 1;
+			no_pressed = false;
+		}
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	{
+		if (no_pressed)
+		{
+			tile_player_Coord.y -= 1;
+			no_pressed = false;
+		}
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	{
+		if (no_pressed)
+		{
+			tile_player_Coord.y += 1;
+			no_pressed = false;
+		}
+	}
+	else
+	{
+		no_pressed = true;
+	}
+}
+
+void Game::Collision()
+{
+	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > TILEMAP_WIDTH || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > TILEMAP_HEIGHT || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == mur || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == porte_fermé || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == exit_porte_fermé)
+	{
+		tile_player_Coord = prev_player_coords;
+	}
+	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > TILEMAP_WIDTH || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > TILEMAP_HEIGHT || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == piège || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == piège_invisible)
+	{
+		level = 1;
+		num_clé = 0;
+		vie -= 1;
+		tile_player_Coord = spawn;
+		chargement = true;
+	}
+	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > TILEMAP_WIDTH || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > TILEMAP_HEIGHT || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == clé)
+	{
+		num_clé += 1;
+		tilemap[tile_player_Coord.y * TILEMAP_WIDTH + tile_player_Coord.x] = sole;
+	}
+	if (num_clé == 1 && level == 2)
+	{
+		tilemap[9 * TILEMAP_WIDTH + 19] = porte_ouverte;
+		tilemap[10 * TILEMAP_WIDTH + 19] = porte_ouverte;
+		tilemap[7 * TILEMAP_WIDTH + 1] = sole;
+	}
+	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > TILEMAP_WIDTH || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > TILEMAP_HEIGHT || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == exit_clé)
+	{
+		num_exit_clé += 1;
+		tilemap[tile_player_Coord.y * TILEMAP_WIDTH + tile_player_Coord.x] = sole;
+	}
+	if (num_exit_clé == 1 && level == 3)
+	{
+		tilemap[7 * TILEMAP_WIDTH + 1] = sole;
+	}
+	if (num_exit_clé == 1 && level == 1)
+	{
+		tilemap[9 * TILEMAP_WIDTH + 0] = exit_porte_ouverte;
+		tilemap[10 * TILEMAP_WIDTH + 0] = exit_porte_ouverte;
+	}
+}
+
+void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit_clé_player)
+{
+	window.clear(sf::Color::Black);
+
+	if ((tile_player_Coord.x == 19 && tile_player_Coord.y == 9) || (tile_player_Coord.x == 19 && tile_player_Coord.y == 10))
+	{
+		tile_player_Coord.x = 1;
+		level += 1;
+		chargement = true;
+	}
+
+	else if (((tile_player_Coord.x == 0 && tile_player_Coord.y == 9) || (tile_player_Coord.x == 0 && tile_player_Coord.y == 10)) && level != 1)
+	{
+		tile_player_Coord.x = 18;
+		level -= 1;
+		chargement = true;
+	}
+	else if ((tile_player_Coord.x == 0 && tile_player_Coord.y == 9 || tile_player_Coord.x == 0 && tile_player_Coord.y == 10) && level == 1)
+	{
+		endgame = true;
+	}
+
+	for (int y = 0; y < TILEMAP_HEIGHT; y++)
+	{
+
+		for (int x = 0; x < TILEMAP_WIDTH; x++)
+		{
+			Sole.setPosition(50 * x, 50 * y);
+			window.draw(Sole);
+
+			if (tilemap[x + y * TILEMAP_WIDTH] == mur)
+			{
+				Mur.setPosition(50 * x, 50 * y);
+				window.draw(Mur);
+			}
+			else if (tilemap[x + y * TILEMAP_WIDTH] == piège)
+			{
+				Piège.setPosition(50 * x, 50 * y);
+				window.draw(Piège);
+			}
+			else if (tilemap[x + y * TILEMAP_WIDTH] == piège_invisible)
+			{
+				Piège_Invisible.setPosition(50 * x, 50 * y);
+				window.draw(Piège_Invisible);
+			}
+			else if (tilemap[x + y * TILEMAP_WIDTH] == clé)
+			{
+				Clé.setPosition(50 * x, 50 * y);
+				window.draw(Clé);
+			}
+			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_clé)
+			{
+				Exit_Clé.setPosition(50 * x, 50 * y);
+				window.draw(Exit_Clé);
+			}
+			else if (tilemap[x + y * TILEMAP_WIDTH] == porte_fermé)
+			{
+				Porte_Fermé.setPosition(50 * x, 50 * y);
+				window.draw(Porte_Fermé);
+			}
+			else if (tilemap[x + y * TILEMAP_WIDTH] == porte_ouverte)
+			{
+				Porte_Ouverte.setPosition(50 * x, 50 * y);
+				window.draw(Porte_Ouverte);
+			}
+			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_porte_fermé)
+			{
+				Exit_Porte_Fermé.setPosition(50 * x, 50 * y);
+				window.draw(Exit_Porte_Fermé);
+			}
+			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_porte_ouverte)
+			{
+				Exit_Porte_Ouverte.setPosition(50 * x, 50 * y);
+				window.draw(Exit_Porte_Ouverte);
+			}
+		}
+	}
+
+	window.draw(tile_player);
+
+	vie_player.Draw(window);
+	clé_player.Draw(window);
+	exit_clé_player.Draw(window);
+}
+
+void Game::GraphicEndGame(GameText gameover, GameText victory, GameText Enter)
+{
+	if (vie <= 0)
+	{
+		window.clear(sf::Color::Black);
+		gameover.Draw(window);
+		Enter.Draw(window);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		{
+			if (no_pressed)
+			{
+				window.close();
+			}
+		}
+	}
+	else if (endgame)
+	{
+		window.clear(sf::Color::Black);
+		victory.Draw(window);
+		Enter.Draw(window);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		{
+			if (no_pressed)
+			{
+				window.close();
+			}
+		}
 	}
 }
 

@@ -5,7 +5,6 @@
 
 #define TILEMAP_WIDTH 20
 #define TILEMAP_HEIGHT 20
-#define BLOCK_DISPLAY 20
 
 enum block
 {
@@ -21,20 +20,19 @@ enum block
 	exit_porte_ouverte = 9
 };
 
-static  int tilemap[TILEMAP_WIDTH * TILEMAP_HEIGHT] = { 0 };
-
-constexpr int kHorizontalMaxSpeed = 1;
-
 class Game
 {
 public:
 	Game();
+
+	void GameLoop();
+
 	void Move();
 	void Collision();
 	void GraphicInGame(GameText vie_player, GameText clé_player, GameText exit_clé_player);
 	void GraphicEndGame(GameText gameover, GameText victory, GameText Enter);
 
-	void GameLoop();
+	
 
 	const sf::Vector2i GetSpawn() { sf::Vector2i spawn(5, 5); return spawn; }
 	sf::Vector2i GetTilePlayerCoord() { sf::Vector2i tile_player_Coord(5, 5); return tile_player_Coord; }
@@ -44,6 +42,10 @@ private:
 	sf::RenderWindow window;
 
 	bool no_pressed = true;
+
+
+	int tilemap[TILEMAP_WIDTH * TILEMAP_HEIGHT] = { 0 };
+	const int kHorizontalMaxSpeed = 1;
 
 
 	sf::RectangleShape tile_map;
