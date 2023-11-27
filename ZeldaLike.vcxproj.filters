@@ -15,12 +15,34 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ZeldaLike.cpp">
+    <ClInclude Include="Game.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="GameText.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Game.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Font Include="datas\fonts\Violin.otf">
+      <Filter>Fichiers de ressources</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="level.data">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="level2.data">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="level3.data">
       <Filter>Fichiers de ressources</Filter>
     </None>
   </ItemGroup>
