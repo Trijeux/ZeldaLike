@@ -101,7 +101,7 @@ void Game::GameLoop()
 		//Met la position du joueur sur le plateau
 		player.SetShapePosition();
 
-		player.GetPrevPlayerCoords() = player.GetTilePlayerCoord();
+		player.PrevCoordAndCoord();
 
 		Move();
 
@@ -177,7 +177,7 @@ void Game::Collision()
 {
 	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == mur || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == porte_fermé || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == exit_porte_fermé)
 	{
-		player.GetTilePlayerCoord() = player.GetPrevPlayerCoords();
+		player.CoordAndPrevCoord();
 	}
 	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == piège || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == piège_invisible)
 	{
@@ -185,7 +185,7 @@ void Game::Collision()
 		player.SetClé('=', 0);
 		player.SetExitClé('=', 0);
 		player.SetVie('-', 1);
-		player.GetTilePlayerCoord() = player.GetSpawn();
+		player.GoSpawn();
 		chargement = true;
 	}
 	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == clé)

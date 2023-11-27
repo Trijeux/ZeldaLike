@@ -18,6 +18,9 @@ public:
 	void SetExitClé(char PorN, int num);
 	void SetVie(char PorN, int num);
 	void SetShapePosition() { tile_player.setPosition(tile_player_Coord.x * 50 + 25, tile_player_Coord.y * 50 + 25); };
+	void PrevCoordAndCoord(){ prev_player_coords = tile_player_Coord; }
+	void CoordAndPrevCoord() { tile_player_Coord = prev_player_coords; }
+	void GoSpawn() { tile_player_Coord = spawn; }
 
 private:
 	sf::CircleShape tile_player;
