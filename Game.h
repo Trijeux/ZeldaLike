@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "GameText.h"
+#include "Player.h"
 
 
 #define TILEMAP_WIDTH 20
@@ -32,11 +33,6 @@ public:
 	void GraphicInGame(GameText vie_player, GameText clé_player, GameText exit_clé_player);
 	void GraphicEndGame(GameText gameover, GameText victory, GameText Enter);
 
-	
-
-	const sf::Vector2i GetSpawn() { sf::Vector2i spawn(5, 5); return spawn; }
-	sf::Vector2i GetTilePlayerCoord() { sf::Vector2i tile_player_Coord(5, 5); return tile_player_Coord; }
-	void SetTilePlayerCoord(char axe, int num);
 
 private:
 	sf::RenderWindow window;
@@ -60,19 +56,12 @@ private:
 	sf::RectangleShape Exit_Porte_Ouverte;
 	sf::RectangleShape Exit_Porte_Fermé;
 
-	sf::CircleShape tile_player;
-	int vie = 3;
-	int num_clé = 0;
-	int num_exit_clé = 0;
+	Player player;
 
 	int level = 1;
 	bool chargement = true;
 	bool endgame = false;
 
 	void load(int level);
-
-	sf::Vector2i tile_player_Coord = sf::Vector2i(5, 5);
-	const sf::Vector2i spawn = sf::Vector2i(5, 5);
-	sf::Vector2i prev_player_coords;
 };
 

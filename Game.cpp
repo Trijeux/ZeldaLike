@@ -16,8 +16,6 @@ Game::Game()
 	Exit_Porte_Ouverte.setSize(sf::Vector2f(50, 50));
 	Exit_Porte_Fermé.setSize(sf::Vector2f(50, 50));
 
-	tile_player.setRadius(15);
-
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(30);
 
@@ -64,12 +62,6 @@ Game::Game()
 	tile_map.setFillColor(sf::Color::Transparent);
 	tile_map.setOutlineColor(sf::Color::White);
 	tile_map.setOutlineThickness(1);
-
-	tile_player.setFillColor(sf::Color::Red);
-	tile_player.setOutlineColor(sf::Color::Green);
-	tile_player.setOutlineThickness(1);
-	tile_player.setOrigin(tile_player.getRadius(), tile_player.getRadius());
-
 }
 
 void Game::GameLoop()
@@ -93,9 +85,9 @@ void Game::GameLoop()
 
 
 
-		std::string nomber_vie = std::to_string(vie);
-		std::string nomber_clé = std::to_string(num_clé);
-		std::string nomber_exit_clé = std::to_string(num_exit_clé);
+		std::string nomber_vie = std::to_string(player.GetVie());
+		std::string nomber_clé = std::to_string(player.GetClé());
+		std::string nomber_exit_clé = std::to_string(player.GetExitClé());
 		GameText vie_player("Vie : " + nomber_vie, 5, 5);
 		GameText clé_player("Clé : " + nomber_clé, 5, 35);
 		GameText exit_clé_player("Exit Clé : " + nomber_exit_clé, 5, 65);
@@ -107,9 +99,9 @@ void Game::GameLoop()
 		Enter.getSize(1.5, 1.5);
 
 		//Met la position du joueur sur le plateau
-		tile_player.setPosition(tile_player_Coord.x * 50 + 25, tile_player_Coord.y * 50 + 25);
+		player.SetShapePosition();
 
-		prev_player_coords = tile_player_Coord;
+		player.GetPrevPlayerCoords() = player.GetTilePlayerCoord();
 
 		Move();
 
@@ -147,7 +139,7 @@ void Game::Move()
 	{
 		if (no_pressed)
 		{
-			tile_player_Coord.x += 1;
+			player.SetTilePlayerCoord('x', '+', 1);
 			no_pressed = false;
 		}
 	}
@@ -155,7 +147,7 @@ void Game::Move()
 	{
 		if (no_pressed)
 		{
-			tile_player_Coord.x -= 1;
+			player.SetTilePlayerCoord('x', '-', 1);
 			no_pressed = false;
 		}
 	}
@@ -163,7 +155,7 @@ void Game::Move()
 	{
 		if (no_pressed)
 		{
-			tile_player_Coord.y -= 1;
+			player.SetTilePlayerCoord('y', '-', 1);
 			no_pressed = false;
 		}
 	}
@@ -171,7 +163,7 @@ void Game::Move()
 	{
 		if (no_pressed)
 		{
-			tile_player_Coord.y += 1;
+			player.SetTilePlayerCoord('y', '+', 1);
 			no_pressed = false;
 		}
 	}
@@ -183,39 +175,40 @@ void Game::Move()
 
 void Game::Collision()
 {
-	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > TILEMAP_WIDTH || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > TILEMAP_HEIGHT || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == mur || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == porte_fermé || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == exit_porte_fermé)
+	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == mur || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == porte_fermé || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == exit_porte_fermé)
 	{
-		tile_player_Coord = prev_player_coords;
+		player.GetTilePlayerCoord() = player.GetPrevPlayerCoords();
 	}
-	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > TILEMAP_WIDTH || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > TILEMAP_HEIGHT || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == piège || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == piège_invisible)
+	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == piège || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == piège_invisible)
 	{
 		level = 1;
-		num_clé = 0;
-		vie -= 1;
-		tile_player_Coord = spawn;
+		player.SetClé('=', 0);
+		player.SetExitClé('=', 0);
+		player.SetVie('-', 1);
+		player.GetTilePlayerCoord() = player.GetSpawn();
 		chargement = true;
 	}
-	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > TILEMAP_WIDTH || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > TILEMAP_HEIGHT || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == clé)
+	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == clé)
 	{
-		num_clé += 1;
-		tilemap[tile_player_Coord.y * TILEMAP_WIDTH + tile_player_Coord.x] = sole;
+		player.SetClé('+', 1);
+		tilemap[player.GetTilePlayerCoord().y * TILEMAP_WIDTH + player.GetTilePlayerCoord().x] = sole;
 	}
-	if (num_clé == 1 && level == 2)
+	if (player.GetClé() == 1 && level == 2)
 	{
 		tilemap[9 * TILEMAP_WIDTH + 19] = porte_ouverte;
 		tilemap[10 * TILEMAP_WIDTH + 19] = porte_ouverte;
 		tilemap[7 * TILEMAP_WIDTH + 1] = sole;
 	}
-	if (tile_player_Coord.x < 0 || tile_player_Coord.x + 1 > TILEMAP_WIDTH || tile_player_Coord.y < 0 || tile_player_Coord.y + 1 > TILEMAP_HEIGHT || tilemap[tile_player_Coord.x + tile_player_Coord.y * TILEMAP_WIDTH] == exit_clé)
+	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == exit_clé)
 	{
-		num_exit_clé += 1;
-		tilemap[tile_player_Coord.y * TILEMAP_WIDTH + tile_player_Coord.x] = sole;
+		player.SetExitClé('+', 1);
+		tilemap[player.GetTilePlayerCoord().y * TILEMAP_WIDTH + player.GetTilePlayerCoord().x] = sole;
 	}
-	if (num_exit_clé == 1 && level == 3)
+	if (player.GetExitClé() == 1 && level == 3)
 	{
 		tilemap[7 * TILEMAP_WIDTH + 1] = sole;
 	}
-	if (num_exit_clé == 1 && level == 1)
+	if (player.GetExitClé() == 1 && level == 1)
 	{
 		tilemap[9 * TILEMAP_WIDTH + 0] = exit_porte_ouverte;
 		tilemap[10 * TILEMAP_WIDTH + 0] = exit_porte_ouverte;
@@ -226,20 +219,20 @@ void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit
 {
 	window.clear(sf::Color::Black);
 
-	if ((tile_player_Coord.x == 19 && tile_player_Coord.y == 9) || (tile_player_Coord.x == 19 && tile_player_Coord.y == 10))
+	if ((player.GetTilePlayerCoord().x == 19 && player.GetTilePlayerCoord().y == 9) || (player.GetTilePlayerCoord().x == 19 && player.GetTilePlayerCoord().y == 10))
 	{
-		tile_player_Coord.x = 1;
+		player.SetTilePlayerCoord('x', '=', 1);
 		level += 1;
 		chargement = true;
 	}
 
-	else if (((tile_player_Coord.x == 0 && tile_player_Coord.y == 9) || (tile_player_Coord.x == 0 && tile_player_Coord.y == 10)) && level != 1)
+	else if (((player.GetTilePlayerCoord().x == 0 && player.GetTilePlayerCoord().y == 9) || (player.GetTilePlayerCoord().x == 0 && player.GetTilePlayerCoord().y == 10)) && level != 1)
 	{
-		tile_player_Coord.x = 18;
+		player.SetTilePlayerCoord('x', '=', 18);
 		level -= 1;
 		chargement = true;
 	}
-	else if ((tile_player_Coord.x == 0 && tile_player_Coord.y == 9 || tile_player_Coord.x == 0 && tile_player_Coord.y == 10) && level == 1)
+	else if ((player.GetTilePlayerCoord().x == 0 && player.GetTilePlayerCoord().y == 9 || player.GetTilePlayerCoord().x == 0 && player.GetTilePlayerCoord().y == 10) && level == 1)
 	{
 		endgame = true;
 	}
@@ -300,7 +293,7 @@ void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit
 		}
 	}
 
-	window.draw(tile_player);
+	window.draw(player.GetShape());
 
 	vie_player.Draw(window);
 	clé_player.Draw(window);
@@ -309,7 +302,7 @@ void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit
 
 void Game::GraphicEndGame(GameText gameover, GameText victory, GameText Enter)
 {
-	if (vie <= 0)
+	if (player.GetVie() <= 0)
 	{
 		window.clear(sf::Color::Black);
 		gameover.Draw(window);
