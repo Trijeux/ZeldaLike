@@ -3,21 +3,22 @@
 
 enum move
 {
-	Down = 1,
-	Hp = 2,
+	up = 1,
+	down = 2,
 	right = 3,
-	Left = 4,
+	left = 4,
+	spawnMove = 5
 };
 
 class Player
 {
 public:
-	Player();
+	Player() = default ;
 
 	int GetVie() { return vie; }
 	int GetClé() { return num_clé; }
 	int GetExitClé() { return num_exit_clé; }
-	sf::CircleShape GetShape() { return tile_player; }
+	sf::Sprite GetSprite() { return tile_player; }
 	sf::Vector2i GetTilePlayerCoord() { return tile_player_Coord; }
 	sf::Vector2i GetPrevPlayerCoords() { return prev_player_coords; }
 	void SetTilePlayerCoord(char axe, char PorN, int num);
@@ -29,9 +30,17 @@ public:
 	void PrevCoordAndCoord(){ prev_player_coords = tile_player_Coord; }
 	void CoordAndPrevCoord() { tile_player_Coord = prev_player_coords; }
 	void GoSpawn() { tile_player_Coord = spawn; }
+	void LoadPlayer();
+	void MovePlayer(int num);
 
 private:
-	sf::CircleShape tile_player;
+	sf::Sprite tile_player;
+	sf::Texture up_;
+	sf::Texture down_;
+	sf::Texture left_;
+	sf::Texture right_;
+
+
 	int vie = 3;
 	int num_clé = 0;
 	int num_exit_clé = 0;

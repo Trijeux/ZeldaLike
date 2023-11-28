@@ -1,15 +1,5 @@
 #include "Player.h"
 
-Player::Player()
-{
-	tile_player.setRadius(15);
-	tile_player.setFillColor(sf::Color::Red);
-	tile_player.setOutlineColor(sf::Color::Green);
-	tile_player.setOutlineThickness(1);
-	tile_player.setOrigin(tile_player.getRadius(), tile_player.getRadius());
-	tile_player.setPosition(spawn.x * 50 + 25, spawn.y * 50 + 25);
-}
-
 void Player::SetTilePlayerCoord(char axe, char PorN, int num)
 {
 	if (axe == 'x')
@@ -17,14 +7,17 @@ void Player::SetTilePlayerCoord(char axe, char PorN, int num)
 		if (PorN == '+')
 		{
 			tile_player_Coord.x += num;
+			MovePlayer(right);
 		}
 		else if(PorN == '-')
 		{
 			tile_player_Coord.x -= num;
+			MovePlayer(left);
 		}
 		else if(PorN == '=')
 		{
 			tile_player_Coord.x = num;
+			
 		}
 	}
 	if (axe == 'y')
@@ -32,10 +25,12 @@ void Player::SetTilePlayerCoord(char axe, char PorN, int num)
 		if (PorN == '+')
 		{
 			tile_player_Coord.y += num;
+			MovePlayer(down);
 		}
 		else if (PorN == '-')
 		{
 			tile_player_Coord.y -= num;
+			MovePlayer(up);
 		}
 		else if (PorN == '=')
 		{
@@ -92,3 +87,31 @@ void Player::SetVie(char PorN, int num)
 	}
 }
 
+void Player::LoadPlayer()
+{
+	up_.loadFromFile("Sprite\\Player\\hero2.png");
+	down_.loadFromFile("Sprite\\Player\\hero1.png");
+	left_.loadFromFile("Sprite\\Player\\hero3.png");
+	right_.loadFromFile("Sprite\\Player\\hero4.png");
+	tile_player.setTexture(down_);
+	tile_player.setScale(2, 2);
+	tile_player.setOrigin(tile_player.getScale().x + 5.5, tile_player.getScale().y + 5);
+}
+
+void Player::MovePlayer(int num)
+{
+	if (num == up)
+	{
+		tile_player.setTexture(up_);
+	}
+	if (num == down || num == spawnMove)
+	{
+		tile_player.setTexture(down_);
+	}
+	if (num == left) {
+		tile_player.setTexture(left_);
+	}
+	if (num == right) {
+		tile_player.setTexture(right_);
+	}
+}

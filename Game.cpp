@@ -7,6 +7,7 @@ Game::Game()
 	window.create(sf::VideoMode(1000, 1000), "SFML works!");
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(30);
+	player.LoadPlayer();
 }
 
 void Game::GameLoop()
@@ -122,6 +123,7 @@ void Game::Collision()
 		player.SetExitClé('=', 0);
 		player.SetVie('-', 1);
 		player.GoSpawn();
+		player.MovePlayer(spawnMove);
 		chargement = true;
 	}
 	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map.GetKey(player))
@@ -173,7 +175,7 @@ void Game::Collision()
 
 void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit_clé_player)
 {
-	window.draw(player.GetShape());
+	window.draw(player.GetSprite());
 
 	vie_player.Draw(window);
 	clé_player.Draw(window);
