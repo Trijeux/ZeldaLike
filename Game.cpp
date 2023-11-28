@@ -1,85 +1,22 @@
 #include "Game.h"
 
+#include "Map.h"
+
 Game::Game()
 {
 	window.create(sf::VideoMode(1000, 1000), "SFML works!");
-
-
-	Sole.setSize(sf::Vector2f(50, 50));
-	Mur.setSize(sf::Vector2f(50, 50));
-	Piège.setSize(sf::Vector2f(50, 50));
-	Piège_Invisible.setSize(sf::Vector2f(50, 50));
-	Clé.setSize(sf::Vector2f(50, 50));
-	Exit_Clé.setSize(sf::Vector2f(50, 50));
-	Porte_Fermé.setSize(sf::Vector2f(50, 50));
-	Porte_Ouverte.setSize(sf::Vector2f(50, 50));
-	Exit_Porte_Ouverte.setSize(sf::Vector2f(50, 50));
-	Exit_Porte_Fermé.setSize(sf::Vector2f(50, 50));
-
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(30);
-
-	Sole.setFillColor(sf::Color::Black);
-	Sole.setOutlineColor(sf::Color::White);
-	Sole.setOutlineThickness(1);
-
-	Mur.setFillColor(sf::Color::Blue);
-	Mur.setOutlineColor(sf::Color::White);
-	Mur.setOutlineThickness(1);
-
-	Piège.setFillColor(sf::Color::Red);
-	Piège.setOutlineColor(sf::Color::White);
-	Piège.setOutlineThickness(1);
-
-	Piège_Invisible.setFillColor(sf::Color::White);
-	Piège_Invisible.setOutlineColor(sf::Color::White);
-	Piège_Invisible.setOutlineThickness(1);
-
-	Clé.setFillColor(sf::Color::Yellow);
-	Clé.setOutlineColor(sf::Color::White);
-	Clé.setOutlineThickness(1);
-
-	Exit_Clé.setFillColor(sf::Color::Cyan);
-	Exit_Clé.setOutlineColor(sf::Color::White);
-	Exit_Clé.setOutlineThickness(1);
-
-	Porte_Fermé.setFillColor(sf::Color::Magenta);
-	Porte_Fermé.setOutlineColor(sf::Color::White);
-	Porte_Fermé.setOutlineThickness(1);
-
-	Porte_Ouverte.setFillColor(sf::Color::Green);
-	Porte_Ouverte.setOutlineColor(sf::Color::White);
-	Porte_Ouverte.setOutlineThickness(1);
-
-	Exit_Porte_Ouverte.setFillColor(sf::Color{ 0, 255, 0, 127 });
-	Exit_Porte_Ouverte.setOutlineColor(sf::Color::White);
-	Exit_Porte_Ouverte.setOutlineThickness(1);
-
-	Exit_Porte_Fermé.setFillColor(sf::Color{ 255, 0, 0, 127 });
-	Exit_Porte_Fermé.setOutlineColor(sf::Color::White);
-	Exit_Porte_Fermé.setOutlineThickness(1);
-
-	tile_map.setFillColor(sf::Color::Transparent);
-	tile_map.setOutlineColor(sf::Color::White);
-	tile_map.setOutlineThickness(1);
 }
 
 void Game::GameLoop()
 {
-
-
 	while (window.isOpen())
 	{
 		if (chargement)
 		{
-			for (int y = 0; y < TILEMAP_HEIGHT; y++)
-			{
-				for (int x = 0; x < TILEMAP_WIDTH; x++)
-				{
-					tilemap[y * TILEMAP_WIDTH + x] = sole;
-				}
-			}
-			load(level);
+			map.ResteMap();
+			map.LoadMap(level);
 			chargement = false;
 		}
 
@@ -122,10 +59,9 @@ void Game::GameLoop()
 			}
 		}
 
+		map.ObjectInGame(window);
 
 		GraphicInGame(vie_player, clé_player, exit_clé_player);
-
-
 
 		GraphicEndGame(gameover, victory, Enter);
 
@@ -175,11 +111,11 @@ void Game::Move()
 
 void Game::Collision()
 {
-	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == mur || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == porte_fermé || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == exit_porte_fermé)
+	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map.GetWall(player) || map.GetDoorClose(player) || map.GetExitDoorClose(player))
 	{
 		player.CoordAndPrevCoord();
 	}
-	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == piège || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == piège_invisible)
+	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map.GetTrap(player) || map.GetTrapInvisible(player))
 	{
 		level = 1;
 		player.SetClé('=', 0);
@@ -188,35 +124,32 @@ void Game::Collision()
 		player.GoSpawn();
 		chargement = true;
 	}
-	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == clé)
+	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map.GetKey(player))
 	{
 		player.SetClé('+', 1);
-		tilemap[player.GetTilePlayerCoord().y * TILEMAP_WIDTH + player.GetTilePlayerCoord().x] = sole;
+		map.TurnsKeyIntoSoil(player);
 	}
 	if (player.GetClé() == 1 && level == 2)
 	{
-		tilemap[9 * TILEMAP_WIDTH + 19] = porte_ouverte;
-		tilemap[10 * TILEMAP_WIDTH + 19] = porte_ouverte;
-		tilemap[7 * TILEMAP_WIDTH + 1] = sole;
+		map.TurnsIntoOpenDoor(19, 9);
+		map.TurnsIntoOpenDoor(19, 10);
+		map.TurnsIntoSoil(1, 7);
 	}
-	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || tilemap[player.GetTilePlayerCoord().x + player.GetTilePlayerCoord().y * TILEMAP_WIDTH] == exit_clé)
+	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map.GetExitKey(player))
 	{
 		player.SetExitClé('+', 1);
-		tilemap[player.GetTilePlayerCoord().y * TILEMAP_WIDTH + player.GetTilePlayerCoord().x] = sole;
+		map.TurnsExitKeyIntoSoil(player);
 	}
 	if (player.GetExitClé() == 1 && level == 3)
 	{
-		tilemap[7 * TILEMAP_WIDTH + 1] = sole;
+		map.TurnsIntoSoil(1, 7);
 	}
 	if (player.GetExitClé() == 1 && level == 1)
 	{
-		tilemap[9 * TILEMAP_WIDTH + 0] = exit_porte_ouverte;
-		tilemap[10 * TILEMAP_WIDTH + 0] = exit_porte_ouverte;
+		map.TurnsIntoExitOpenDoor(0, 9);
+		map.TurnsIntoExitOpenDoor(0, 10);
 	}
-}
 
-void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit_clé_player)
-{
 	window.clear(sf::Color::Black);
 
 	if ((player.GetTilePlayerCoord().x == 19 && player.GetTilePlayerCoord().y == 9) || (player.GetTilePlayerCoord().x == 19 && player.GetTilePlayerCoord().y == 10))
@@ -236,63 +169,10 @@ void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit
 	{
 		endgame = true;
 	}
+}
 
-	for (int y = 0; y < TILEMAP_HEIGHT; y++)
-	{
-
-		for (int x = 0; x < TILEMAP_WIDTH; x++)
-		{
-			Sole.setPosition(50 * x, 50 * y);
-			window.draw(Sole);
-
-			if (tilemap[x + y * TILEMAP_WIDTH] == mur)
-			{
-				Mur.setPosition(50 * x, 50 * y);
-				window.draw(Mur);
-			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == piège)
-			{
-				Piège.setPosition(50 * x, 50 * y);
-				window.draw(Piège);
-			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == piège_invisible)
-			{
-				Piège_Invisible.setPosition(50 * x, 50 * y);
-				window.draw(Piège_Invisible);
-			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == clé)
-			{
-				Clé.setPosition(50 * x, 50 * y);
-				window.draw(Clé);
-			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_clé)
-			{
-				Exit_Clé.setPosition(50 * x, 50 * y);
-				window.draw(Exit_Clé);
-			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == porte_fermé)
-			{
-				Porte_Fermé.setPosition(50 * x, 50 * y);
-				window.draw(Porte_Fermé);
-			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == porte_ouverte)
-			{
-				Porte_Ouverte.setPosition(50 * x, 50 * y);
-				window.draw(Porte_Ouverte);
-			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_porte_fermé)
-			{
-				Exit_Porte_Fermé.setPosition(50 * x, 50 * y);
-				window.draw(Exit_Porte_Fermé);
-			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_porte_ouverte)
-			{
-				Exit_Porte_Ouverte.setPosition(50 * x, 50 * y);
-				window.draw(Exit_Porte_Ouverte);
-			}
-		}
-	}
-
+void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit_clé_player)
+{
 	window.draw(player.GetShape());
 
 	vie_player.Draw(window);
@@ -329,47 +209,3 @@ void Game::GraphicEndGame(GameText gameover, GameText victory, GameText Enter)
 		}
 	}
 }
-
-void Game::load(int level)
-{
-	if (level == 1)
-	{
-		FILE* f = _fsopen("level.data", "rb", _SH_DENYRD);
-		fread(tilemap, sizeof(tilemap), 1, f);
-		fclose(f);
-	}
-	else if (level == 2)
-	{
-		FILE* f = _fsopen("level2.data", "rb", _SH_DENYRD);
-		fread(tilemap, sizeof(tilemap), 1, f);
-		fclose(f);
-	}
-	else if (level == 3)
-	{
-		FILE* f = _fsopen("level3.data", "rb", _SH_DENYRD);
-		fread(tilemap, sizeof(tilemap), 1, f);
-		fclose(f);
-	}
-}
-
-//void Game::save(int level)
-//{
-//	if (level == 1)
-//	{
-//		FILE* f = _fsopen("level.data", "wb", _SH_DENYWR);
-//		fwrite(tilemap, sizeof(tilemap), 1, f);
-//		fclose(f);
-//	}
-//	else if (level == 2)
-//	{
-//		FILE* f = _fsopen("level2.data", "wb", _SH_DENYWR);
-//		fwrite(tilemap, sizeof(tilemap), 1, f);
-//		fclose(f);
-//	}
-//	else if (level == 3)
-//	{
-//		FILE* f = _fsopen("level3.data", "wb", _SH_DENYWR);
-//		fwrite(tilemap, sizeof(tilemap), 1, f);
-//		fclose(f);
-//	}
-//}

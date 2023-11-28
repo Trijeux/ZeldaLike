@@ -1,6 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+enum move
+{
+	Down = 1,
+	Hp = 2,
+	right = 3,
+	Left = 4,
+};
+
 class Player
 {
 public:
