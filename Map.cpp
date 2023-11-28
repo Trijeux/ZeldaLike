@@ -1,64 +1,6 @@
 #include "Map.h"
 #include "Game.h"
 
-Map::Map()
-{
-	Sole.setSize(sf::Vector2f(50, 50));
-	Mur.setSize(sf::Vector2f(50, 50));
-	Piège.setSize(sf::Vector2f(50, 50));
-	Piège_Invisible.setSize(sf::Vector2f(50, 50));
-	Clé.setSize(sf::Vector2f(50, 50));
-	Exit_Clé.setSize(sf::Vector2f(50, 50));
-	Porte_Fermé.setSize(sf::Vector2f(50, 50));
-	Porte_Ouverte.setSize(sf::Vector2f(50, 50));
-	Exit_Porte_Ouverte.setSize(sf::Vector2f(50, 50));
-	Exit_Porte_Fermé.setSize(sf::Vector2f(50, 50));
-
-	Sole.setFillColor(sf::Color::Black);
-	Sole.setOutlineColor(sf::Color::White);
-	Sole.setOutlineThickness(1);
-
-	Mur.setFillColor(sf::Color::Blue);
-	Mur.setOutlineColor(sf::Color::White);
-	Mur.setOutlineThickness(1);
-
-	Piège.setFillColor(sf::Color::Red);
-	Piège.setOutlineColor(sf::Color::White);
-	Piège.setOutlineThickness(1);
-
-	Piège_Invisible.setFillColor(sf::Color::White);
-	Piège_Invisible.setOutlineColor(sf::Color::White);
-	Piège_Invisible.setOutlineThickness(1);
-
-	Clé.setFillColor(sf::Color::Yellow);
-	Clé.setOutlineColor(sf::Color::White);
-	Clé.setOutlineThickness(1);
-
-	Exit_Clé.setFillColor(sf::Color::Cyan);
-	Exit_Clé.setOutlineColor(sf::Color::White);
-	Exit_Clé.setOutlineThickness(1);
-
-	Porte_Fermé.setFillColor(sf::Color::Magenta);
-	Porte_Fermé.setOutlineColor(sf::Color::White);
-	Porte_Fermé.setOutlineThickness(1);
-
-	Porte_Ouverte.setFillColor(sf::Color::Green);
-	Porte_Ouverte.setOutlineColor(sf::Color::White);
-	Porte_Ouverte.setOutlineThickness(1);
-
-	Exit_Porte_Ouverte.setFillColor(sf::Color{ 0, 255, 0, 127 });
-	Exit_Porte_Ouverte.setOutlineColor(sf::Color::White);
-	Exit_Porte_Ouverte.setOutlineThickness(1);
-
-	Exit_Porte_Fermé.setFillColor(sf::Color{ 255, 0, 0, 127 });
-	Exit_Porte_Fermé.setOutlineColor(sf::Color::White);
-	Exit_Porte_Fermé.setOutlineThickness(1);
-
-	tile_map.setFillColor(sf::Color::Transparent);
-	tile_map.setOutlineColor(sf::Color::White);
-	tile_map.setOutlineThickness(1);
-}
-
 void Map::ObjectInGame(sf::RenderWindow& window)
 {
 	for (int y = 0; y < TILEMAP_HEIGHT; y++)
@@ -66,53 +8,63 @@ void Map::ObjectInGame(sf::RenderWindow& window)
 
 		for (int x = 0; x < TILEMAP_WIDTH; x++)
 		{
-			Sole.setPosition(50 * x, 50 * y);
-			window.draw(Sole);
+			sole_sprite_.setPosition(50 * x, 50 * y);
+			sole_sprite_.setTexture(sole_texture_);
+			window.draw(sole_sprite_);
 
 			if (tilemap[x + y * TILEMAP_WIDTH] == mur)
 			{
-				Mur.setPosition(50 * x, 50 * y);
-				window.draw(Mur);
+				mur_sprite_.setPosition(50 * x, 50 * y);
+				mur_sprite_.setTexture(mur_texture_);
+				window.draw(mur_sprite_);
 			}
 			else if (tilemap[x + y * TILEMAP_WIDTH] == piège)
 			{
-				Piège.setPosition(50 * x, 50 * y);
-				window.draw(Piège);
+				piège_sprite_.setPosition(50 * x, 50 * y);
+				piège_sprite_.setTexture(piège_texture_);
+				window.draw(piège_sprite_);
 			}
 			else if (tilemap[x + y * TILEMAP_WIDTH] == piège_invisible)
 			{
-				Piège_Invisible.setPosition(50 * x, 50 * y);
-				window.draw(Piège_Invisible);
+				piège_invisible_sprite_.setPosition(50 * x, 50 * y);
+				piège_invisible_sprite_.setTexture(sole_texture_);
+				window.draw(piège_invisible_sprite_);
 			}
 			else if (tilemap[x + y * TILEMAP_WIDTH] == clé)
 			{
-				Clé.setPosition(50 * x, 50 * y);
-				window.draw(Clé);
+				clé_sprite_.setPosition(50 * x, 50 * y);
+				clé_sprite_.setTexture(clé_texture_);
+				window.draw(clé_sprite_);
 			}
 			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_clé)
 			{
-				Exit_Clé.setPosition(50 * x, 50 * y);
-				window.draw(Exit_Clé);
+				exit_clé_sprite_.setPosition(50 * x, 50 * y);
+				exit_clé_sprite_.setTexture(exit_clé_texture_);
+				window.draw(exit_clé_sprite_);
 			}
 			else if (tilemap[x + y * TILEMAP_WIDTH] == porte_fermé)
 			{
-				Porte_Fermé.setPosition(50 * x, 50 * y);
-				window.draw(Porte_Fermé);
+				porte_fermé_sprite_.setPosition(50 * x, 50 * y);
+				porte_fermé_sprite_.setTexture(porte_fermé_texture_);
+				window.draw(porte_fermé_sprite_);
 			}
 			else if (tilemap[x + y * TILEMAP_WIDTH] == porte_ouverte)
 			{
-				Porte_Ouverte.setPosition(50 * x, 50 * y);
-				window.draw(Porte_Ouverte);
+				porte_ouverte_sprite_.setPosition(50 * x, 50 * y);
+				porte_ouverte_sprite_.setTexture(sole_texture_);
+				window.draw(porte_ouverte_sprite_);
 			}
 			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_porte_fermé)
 			{
-				Exit_Porte_Fermé.setPosition(50 * x, 50 * y);
-				window.draw(Exit_Porte_Fermé);
+				exit_porte_fermé_sprite_.setPosition(50 * x, 50 * y);
+				exit_porte_fermé_sprite_.setTexture(exit_porte_fermé_texture_);
+				window.draw(exit_porte_fermé_sprite_);
 			}
 			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_porte_ouverte)
 			{
-				Exit_Porte_Ouverte.setPosition(50 * x, 50 * y);
-				window.draw(Exit_Porte_Ouverte);
+				exit_porte_ouverte_sprite_.setPosition(50 * x, 50 * y);
+				exit_porte_ouverte_sprite_.setTexture(sole_texture_);
+				window.draw(exit_porte_ouverte_sprite_);
 			}
 		}
 	}
@@ -196,4 +148,12 @@ void Map::LoadMap(int level)
 		fread(tilemap, sizeof(tilemap), 1, f);
 		fclose(f);
 	}
+	
+	sole_texture_.loadFromFile("Sprite\\Map\\Ground.png");
+	mur_texture_.loadFromFile("Sprite\\Map\\Wall.png");
+	piège_texture_.loadFromFile("Sprite\\Map\\Trap.png");
+	clé_texture_.loadFromFile("Sprite\\Map\\Key.png");
+	exit_clé_texture_.loadFromFile("Sprite\\Map\\Master-Key.png");
+	porte_fermé_texture_.loadFromFile("Sprite\\Map\\Close-Door.png");
+	exit_porte_fermé_texture_.loadFromFile("Sprite\\Map\\Close-Exit-Door.png");
 }

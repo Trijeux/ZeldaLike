@@ -26,7 +26,7 @@ enum block
 class Map
 {
 public:
-	Map();
+	Map() = default;
 
 	void ObjectInGame(sf::RenderWindow& window);
 	void ResteMap();
@@ -47,17 +47,25 @@ public:
 
 private:
 
-	sf::RectangleShape tile_map;
-	sf::RectangleShape Sole;
-	sf::RectangleShape Mur;
-	sf::RectangleShape Piège;
-	sf::RectangleShape Piège_Invisible;
-	sf::RectangleShape Clé;
-	sf::RectangleShape Exit_Clé;
-	sf::RectangleShape Porte_Fermé;
-	sf::RectangleShape Porte_Ouverte;
-	sf::RectangleShape Exit_Porte_Ouverte;
-	sf::RectangleShape Exit_Porte_Fermé;
+	sf::Sprite sole_sprite_;
+	sf::Sprite mur_sprite_;
+	sf::Sprite piège_sprite_;
+	sf::Sprite piège_invisible_sprite_;
+	sf::Sprite clé_sprite_;
+	sf::Sprite exit_clé_sprite_;
+	sf::Sprite porte_fermé_sprite_;
+	sf::Sprite porte_ouverte_sprite_;
+	sf::Sprite exit_porte_ouverte_sprite_;
+	sf::Sprite exit_porte_fermé_sprite_;
+
+
+	sf::Texture sole_texture_;
+	sf::Texture mur_texture_;
+	sf::Texture piège_texture_;
+	sf::Texture clé_texture_;
+	sf::Texture exit_clé_texture_;
+	sf::Texture porte_fermé_texture_;
+	sf::Texture exit_porte_fermé_texture_;
 
 	int tilemap[TILEMAP_WIDTH * TILEMAP_HEIGHT] = { 0 };
 };

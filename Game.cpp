@@ -60,8 +60,6 @@ void Game::GameLoop()
 			}
 		}
 
-		map.ObjectInGame(window);
-
 		GraphicInGame(vie_player, clé_player, exit_clé_player);
 
 		GraphicEndGame(gameover, victory, Enter);
@@ -152,7 +150,7 @@ void Game::Collision()
 		map.TurnsIntoExitOpenDoor(0, 10);
 	}
 
-	window.clear(sf::Color::Black);
+	
 
 	if ((player.GetTilePlayerCoord().x == 19 && player.GetTilePlayerCoord().y == 9) || (player.GetTilePlayerCoord().x == 19 && player.GetTilePlayerCoord().y == 10))
 	{
@@ -175,6 +173,10 @@ void Game::Collision()
 
 void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit_clé_player)
 {
+	window.clear(sf::Color::Black);
+
+	map.ObjectInGame(window);
+
 	window.draw(player.GetSprite());
 
 	vie_player.Draw(window);
