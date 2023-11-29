@@ -12,7 +12,7 @@ public:
 	GameText(std::string str, int x, int y)
 	{
 		
-		font_.loadFromFile("C:\\Users\\antho\\Desktop\\Jeux en dev\\VirtualStudio\\C++\\Code GitHub\\ZeldaLike\\datas\\fonts\\Violin.otf");
+		font_.loadFromFile("datas\\fonts\\Violin.otf");
 
 		text_.setFont(font_);
 		text_.setString(str);
