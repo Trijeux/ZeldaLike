@@ -8,109 +8,109 @@ void Map::ObjectInGame(sf::RenderWindow& window)
 
 		for (int x = 0; x < TILEMAP_WIDTH; x++)
 		{
-			sole_sprite_.setPosition(50 * x, 50 * y);
-			sole_sprite_.setTexture(sole_texture_);
-			window.draw(sole_sprite_);
+			ground_sprite_.setPosition(50 * x, 50 * y);
+			ground_sprite_.setTexture(ground_texture_);
+			window.draw(ground_sprite_);
 
-			if (tilemap[x + y * TILEMAP_WIDTH] == mur)
+			if (tilemap[x + y * TILEMAP_WIDTH] == kMur)
 			{
-				mur_sprite_.setPosition(50 * x, 50 * y);
-				mur_sprite_.setTexture(mur_texture_);
-				window.draw(mur_sprite_);
+				wall_sprite_.setPosition(50 * x, 50 * y);
+				wall_sprite_.setTexture(wall_texture_);
+				window.draw(wall_sprite_);
 			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == piège)
+			else if (tilemap[x + y * TILEMAP_WIDTH] == kTrap)
 			{
-				piège_sprite_.setPosition(50 * x, 50 * y);
-				piège_sprite_.setTexture(piège_texture_);
-				window.draw(piège_sprite_);
+				trap_sprite_.setPosition(50 * x, 50 * y);
+				trap_sprite_.setTexture(trap_texture_);
+				window.draw(trap_sprite_);
 			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == piège_invisible)
+			else if (tilemap[x + y * TILEMAP_WIDTH] == kInvisibleTrap)
 			{
-				piège_invisible_sprite_.setPosition(50 * x, 50 * y);
-				piège_invisible_sprite_.setTexture(sole_texture_);
-				window.draw(piège_invisible_sprite_);
+				invisible_trap_sprite_.setPosition(50 * x, 50 * y);
+				invisible_trap_sprite_.setTexture(ground_texture_);
+				window.draw(invisible_trap_sprite_);
 			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == clé)
+			else if (tilemap[x + y * TILEMAP_WIDTH] == kKey)
 			{
-				clé_sprite_.setPosition(50 * x, 50 * y);
-				clé_sprite_.setTexture(clé_texture_);
-				window.draw(clé_sprite_);
+				key_sprite_.setPosition(50 * x, 50 * y);
+				key_sprite_.setTexture(key_texture_);
+				window.draw(key_sprite_);
 			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_clé)
+			else if (tilemap[x + y * TILEMAP_WIDTH] == kExitKey)
 			{
-				exit_clé_sprite_.setPosition(50 * x, 50 * y);
-				exit_clé_sprite_.setTexture(exit_clé_texture_);
-				window.draw(exit_clé_sprite_);
+				exit_key_sprite_.setPosition(50 * x, 50 * y);
+				exit_key_sprite_.setTexture(exit_key_texture_);
+				window.draw(exit_key_sprite_);
 			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == porte_fermé)
+			else if (tilemap[x + y * TILEMAP_WIDTH] == kCloseDoor)
 			{
-				porte_fermé_sprite_.setPosition(50 * x, 50 * y);
-				porte_fermé_sprite_.setTexture(porte_fermé_texture_);
-				window.draw(porte_fermé_sprite_);
+				close_door_sprite_.setPosition(50 * x, 50 * y);
+				close_door_sprite_.setTexture(close_door_texture_);
+				window.draw(close_door_sprite_);
 			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == porte_ouverte)
+			else if (tilemap[x + y * TILEMAP_WIDTH] == kOpenDoor)
 			{
-				porte_ouverte_sprite_.setPosition(50 * x, 50 * y);
-				porte_ouverte_sprite_.setTexture(sole_texture_);
-				window.draw(porte_ouverte_sprite_);
+				open_door_sprite_.setPosition(50 * x, 50 * y);
+				open_door_sprite_.setTexture(ground_texture_);
+				window.draw(open_door_sprite_);
 			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_porte_fermé)
+			else if (tilemap[x + y * TILEMAP_WIDTH] == kCloseExitDoor)
 			{
-				exit_porte_fermé_sprite_.setPosition(50 * x, 50 * y);
-				exit_porte_fermé_sprite_.setTexture(exit_porte_fermé_texture_);
-				window.draw(exit_porte_fermé_sprite_);
+				close_exit_door_sprite_.setPosition(50 * x, 50 * y);
+				close_exit_door_sprite_.setTexture(close_exit_door_texture_);
+				window.draw(close_exit_door_sprite_);
 			}
-			else if (tilemap[x + y * TILEMAP_WIDTH] == exit_porte_ouverte)
+			else if (tilemap[x + y * TILEMAP_WIDTH] == kOpenExitDoor)
 			{
-				exit_porte_ouverte_sprite_.setPosition(50 * x, 50 * y);
-				exit_porte_ouverte_sprite_.setTexture(sole_texture_);
-				window.draw(exit_porte_ouverte_sprite_);
+				open_exit_door_sprite_.setPosition(50 * x, 50 * y);
+				open_exit_door_sprite_.setTexture(ground_texture_);
+				window.draw(open_exit_door_sprite_);
 			}
 		}
 	}
 }
 
-void Map::ResteMap()
+void Map::ResetMap()
 {
 	for (int y = 0; y < TILEMAP_HEIGHT; y++)
 	{
 		for (int x = 0; x < TILEMAP_WIDTH; x++)
 		{
-			tilemap[y * TILEMAP_WIDTH + x] = sole;
+			tilemap[y * TILEMAP_WIDTH + x] = kSole;
 		}
 	}
 }
 
 void Map::TurnsKeyIntoSoil(Player& player)
 {
-	tilemap[player.GetTilePlayerCoord().y * TILEMAP_WIDTH + player.GetTilePlayerCoord().x] = sole;
+	tilemap[player.GetTilePlayerCoord().y * TILEMAP_WIDTH + player.GetTilePlayerCoord().x] = kSole;
 }
 
 void Map::TurnsIntoOpenDoor(int x, int y)
 {
-	tilemap[y * TILEMAP_WIDTH + x] = porte_ouverte;
+	tilemap[y * TILEMAP_WIDTH + x] = kOpenDoor;
 }
 
 void Map::TurnsIntoExitOpenDoor(int x, int y)
 {
-	tilemap[y * TILEMAP_WIDTH + x] = exit_porte_ouverte;
+	tilemap[y * TILEMAP_WIDTH + x] = kOpenExitDoor;
 }
 
-//void Map::SaveMap(int level)
+//void Map::SaveMap(int level_)
 //{
-//	if (level == 1)
+//	if (level_ == 1)
 //	{
-//		FILE* f = _fsopen("level.data", "wb", _SH_DENYWR);
+//		FILE* f = _fsopen("level_.data", "wb", _SH_DENYWR);
 //		fwrite(tilemap, sizeof(tilemap), 1, f);
 //		fclose(f);
 //	}
-//	else if (level == 2)
+//	else if (level_ == 2)
 //	{
 //		FILE* f = _fsopen("level2.data", "wb", _SH_DENYWR);
 //		fwrite(tilemap, sizeof(tilemap), 1, f);
 //		fclose(f);
 //	}
-//	else if (level == 3)
+//	else if (level_ == 3)
 //	{
 //		FILE* f = _fsopen("level3.data", "wb", _SH_DENYWR);
 //		fwrite(tilemap, sizeof(tilemap), 1, f);
@@ -120,12 +120,12 @@ void Map::TurnsIntoExitOpenDoor(int x, int y)
 
 void Map::TurnsIntoSoil(int x, int y)
 {
-	tilemap[y * TILEMAP_WIDTH + x] = sole;
+	tilemap[y * TILEMAP_WIDTH + x] = kSole;
 }
 
 void Map::TurnsExitKeyIntoSoil(Player& player)
 {
-	tilemap[player.GetTilePlayerCoord().y * TILEMAP_WIDTH + player.GetTilePlayerCoord().x] = sole;
+	tilemap[player.GetTilePlayerCoord().y * TILEMAP_WIDTH + player.GetTilePlayerCoord().x] = kSole;
 }
 
 void Map::LoadMap(int level)
@@ -149,11 +149,11 @@ void Map::LoadMap(int level)
 		fclose(f);
 	}
 	
-	sole_texture_.loadFromFile("Sprite\\Map\\Ground.png");
-	mur_texture_.loadFromFile("Sprite\\Map\\Wall.png");
-	piège_texture_.loadFromFile("Sprite\\Map\\Trap.png");
-	clé_texture_.loadFromFile("Sprite\\Map\\Key.png");
-	exit_clé_texture_.loadFromFile("Sprite\\Map\\Master-Key.png");
-	porte_fermé_texture_.loadFromFile("Sprite\\Map\\Close-Door.png");
-	exit_porte_fermé_texture_.loadFromFile("Sprite\\Map\\Close-Exit-Door.png");
+	ground_texture_.loadFromFile("Sprite\\Map\\Ground.png");
+	wall_texture_.loadFromFile("Sprite\\Map\\Wall.png");
+	trap_texture_.loadFromFile("Sprite\\Map\\Trap.png");
+	key_texture_.loadFromFile("Sprite\\Map\\Key.png");
+	exit_key_texture_.loadFromFile("Sprite\\Map\\Master-Key.png");
+	close_door_texture_.loadFromFile("Sprite\\Map\\Close-Door.png");
+	close_exit_door_texture_.loadFromFile("Sprite\\Map\\Close-Exit-Door.png");
 }

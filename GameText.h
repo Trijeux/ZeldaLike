@@ -6,7 +6,7 @@ class GameText
 {
 	sf::Text text_;
 	sf::Font font_;
-	bool toDisplay_ = true;
+	bool to_display_ = true;
 
 public:
 	GameText(std::string str, int x, int y)
@@ -22,21 +22,21 @@ public:
 	
 	void Draw(sf::RenderWindow& window_)
 	{
-		if (toDisplay_)
+		if (to_display_)
 			window_.draw(text_);
 	}
 	
 	void On()
 	{
-		toDisplay_ = true;
+		to_display_ = true;
 	}
 
 	void Off()
 	{
-		toDisplay_ = false;
+		to_display_ = false;
 	}
 
-	void getSize(float x, float y)
+	void GetSize(float x, float y)
 	{
 		text_.setScale(x, y);
 	}

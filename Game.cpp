@@ -4,55 +4,55 @@
 
 Game::Game()
 {
-	window.create(sf::VideoMode(1000, 1000), "SFML works!");
-	window.setVerticalSyncEnabled(true);
-	window.setFramerateLimit(30);
-	player.LoadPlayer();
+	window_.create(sf::VideoMode(1000, 1000), "SFML works!");
+	window_.setVerticalSyncEnabled(true);
+	window_.setFramerateLimit(30);
+	player_.LoadPlayer();
 }
 
 void Game::GameLoop()
 {
-	while (window.isOpen())
+	while (window_.isOpen())
 	{
-		if (chargement)
+		if (loading_)
 		{
-			map.ResteMap();
-			map.LoadMap(level);
-			chargement = false;
+			map_.ResetMap();
+			map_.LoadMap(level_);
+			loading_ = false;
 		}
 
 
 
-		std::string nomber_vie = std::to_string(player.GetVie());
-		std::string nomber_clé = std::to_string(player.GetClé());
-		std::string nomber_exit_clé = std::to_string(player.GetExitClé());
-		GameText vie_player("Vie : " + nomber_vie, 5, 5);
-		GameText clé_player("Clé : " + nomber_clé, 5, 35);
-		GameText exit_clé_player("Exit Clé : " + nomber_exit_clé, 5, 65);
+		std::string num_life = std::to_string(player_.GetLife());
+		std::string num_key = std::to_string(player_.GetKey());
+		std::string nom_exit_key = std::to_string(player_.GetExitKey());
+		GameText life_player("Vie : " + num_life, 5, 5);
+		GameText key_player("Clé : " + num_key, 5, 35);
+		GameText exit_key_player("Exit Clé : " + nom_exit_key, 5, 65);
 		GameText gameover("Game Over vous avez perdu", 320, 400);
-		gameover.getSize(1.5, 1.5);
+		gameover.GetSize(1.5, 1.5);
 		GameText victory("Félicitations vous avez gagné", 320, 400);
-		victory.getSize(1.5, 1.5);
+		victory.GetSize(1.5, 1.5);
 		GameText Enter("Appuyez sur Enter pour quitter", 320, 450);
-		Enter.getSize(1.5, 1.5);
+		Enter.GetSize(1.5, 1.5);
 
 		//Met la position du joueur sur le plateau
-		player.SetShapePosition();
+		player_.SetShapePosition();
 
-		player.PrevCoordAndCoord();
+		player_.PrevCoordInCoord();
 
 		Move();
 
 		Collision();
 
 		sf::Event event;
-		while (window.pollEvent(event))
+		while (window_.pollEvent(event))
 		{
 			switch (event.type)
 			{
 			case sf::Event::Closed:
 
-				window.close();
+				window_.close();
 				break;
 
 			default:
@@ -60,11 +60,11 @@ void Game::GameLoop()
 			}
 		}
 
-		GraphicInGame(vie_player, clé_player, exit_clé_player);
+		GraphicInGame(life_player, key_player, exit_key_player);
 
 		GraphicEndGame(gameover, victory, Enter);
 
-		window.display();
+		window_.display();
 	}
 }
 
@@ -72,143 +72,143 @@ void Game::Move()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		if (no_pressed)
+		if (no_pressed_)
 		{
-			player.SetTilePlayerCoord('x', '+', 1);
-			no_pressed = false;
+			player_.SetTilePlayerCoord('x', '+', 1);
+			no_pressed_ = false;
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		if (no_pressed)
+		if (no_pressed_)
 		{
-			player.SetTilePlayerCoord('x', '-', 1);
-			no_pressed = false;
+			player_.SetTilePlayerCoord('x', '-', 1);
+			no_pressed_ = false;
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		if (no_pressed)
+		if (no_pressed_)
 		{
-			player.SetTilePlayerCoord('y', '-', 1);
-			no_pressed = false;
+			player_.SetTilePlayerCoord('y', '-', 1);
+			no_pressed_ = false;
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
-		if (no_pressed)
+		if (no_pressed_)
 		{
-			player.SetTilePlayerCoord('y', '+', 1);
-			no_pressed = false;
+			player_.SetTilePlayerCoord('y', '+', 1);
+			no_pressed_ = false;
 		}
 	}
 	else
 	{
-		no_pressed = true;
+		no_pressed_ = true;
 	}
 }
 
 void Game::Collision()
 {
-	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map.GetWall(player) || map.GetDoorClose(player) || map.GetExitDoorClose(player))
+	if (player_.GetTilePlayerCoord().x < 0 || player_.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player_.GetTilePlayerCoord().y < 0 || player_.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map_.GetWall(player_) || map_.GetCloseDoor(player_) || map_.GetCloseExitDoor(player_))
 	{
-		player.CoordAndPrevCoord();
+		player_.CoordInPrevCoord();
 	}
-	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map.GetTrap(player) || map.GetTrapInvisible(player))
+	if (player_.GetTilePlayerCoord().x < 0 || player_.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player_.GetTilePlayerCoord().y < 0 || player_.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map_.GetTrap(player_) || map_.GetInvisibleTrap(player_))
 	{
-		level = 1;
-		player.SetClé('=', 0);
-		player.SetExitClé('=', 0);
-		player.SetVie('-', 1);
-		player.GoSpawn();
-		player.MovePlayer(spawnMove);
-		chargement = true;
+		level_ = 1;
+		player_.SetKey('=', 0);
+		player_.SetExitKey('=', 0);
+		player_.SetLife('-', 1);
+		player_.GoSpawn();
+		player_.MovePlayer(kSpawnMove);
+		loading_ = true;
 	}
-	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map.GetKey(player))
+	if (player_.GetTilePlayerCoord().x < 0 || player_.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player_.GetTilePlayerCoord().y < 0 || player_.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map_.GetKey(player_))
 	{
-		player.SetClé('+', 1);
-		map.TurnsKeyIntoSoil(player);
+		player_.SetKey('+', 1);
+		map_.TurnsKeyIntoSoil(player_);
 	}
-	if (player.GetClé() == 1 && level == 2)
+	if (player_.GetKey() == 1 && level_ == 2)
 	{
-		map.TurnsIntoOpenDoor(19, 9);
-		map.TurnsIntoOpenDoor(19, 10);
-		map.TurnsIntoSoil(1, 7);
+		map_.TurnsIntoOpenDoor(19, 9);
+		map_.TurnsIntoOpenDoor(19, 10);
+		map_.TurnsIntoSoil(1, 7);
 	}
-	if (player.GetTilePlayerCoord().x < 0 || player.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player.GetTilePlayerCoord().y < 0 || player.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map.GetExitKey(player))
+	if (player_.GetTilePlayerCoord().x < 0 || player_.GetTilePlayerCoord().x + 1 > TILEMAP_WIDTH || player_.GetTilePlayerCoord().y < 0 || player_.GetTilePlayerCoord().y + 1 > TILEMAP_HEIGHT || map_.GetExitKey(player_))
 	{
-		player.SetExitClé('+', 1);
-		map.TurnsExitKeyIntoSoil(player);
+		player_.SetExitKey('+', 1);
+		map_.TurnsExitKeyIntoSoil(player_);
 	}
-	if (player.GetExitClé() == 1 && level == 3)
+	if (player_.GetExitKey() == 1 && level_ == 3)
 	{
-		map.TurnsIntoSoil(1, 7);
+		map_.TurnsIntoSoil(1, 7);
 	}
-	if (player.GetExitClé() == 1 && level == 1)
+	if (player_.GetExitKey() == 1 && level_ == 1)
 	{
-		map.TurnsIntoExitOpenDoor(0, 9);
-		map.TurnsIntoExitOpenDoor(0, 10);
+		map_.TurnsIntoExitOpenDoor(0, 9);
+		map_.TurnsIntoExitOpenDoor(0, 10);
 	}
 
 	
 
-	if ((player.GetTilePlayerCoord().x == 19 && player.GetTilePlayerCoord().y == 9) || (player.GetTilePlayerCoord().x == 19 && player.GetTilePlayerCoord().y == 10))
+	if ((player_.GetTilePlayerCoord().x == 19 && player_.GetTilePlayerCoord().y == 9) || (player_.GetTilePlayerCoord().x == 19 && player_.GetTilePlayerCoord().y == 10))
 	{
-		player.SetTilePlayerCoord('x', '=', 1);
-		level += 1;
-		chargement = true;
+		player_.SetTilePlayerCoord('x', '=', 1);
+		level_ += 1;
+		loading_ = true;
 	}
 
-	else if (((player.GetTilePlayerCoord().x == 0 && player.GetTilePlayerCoord().y == 9) || (player.GetTilePlayerCoord().x == 0 && player.GetTilePlayerCoord().y == 10)) && level != 1)
+	else if (((player_.GetTilePlayerCoord().x == 0 && player_.GetTilePlayerCoord().y == 9) || (player_.GetTilePlayerCoord().x == 0 && player_.GetTilePlayerCoord().y == 10)) && level_ != 1)
 	{
-		player.SetTilePlayerCoord('x', '=', 18);
-		level -= 1;
-		chargement = true;
+		player_.SetTilePlayerCoord('x', '=', 18);
+		level_ -= 1;
+		loading_ = true;
 	}
-	else if ((player.GetTilePlayerCoord().x == 0 && player.GetTilePlayerCoord().y == 9 || player.GetTilePlayerCoord().x == 0 && player.GetTilePlayerCoord().y == 10) && level == 1)
+	else if ((player_.GetTilePlayerCoord().x == 0 && player_.GetTilePlayerCoord().y == 9 || player_.GetTilePlayerCoord().x == 0 && player_.GetTilePlayerCoord().y == 10) && level_ == 1)
 	{
-		endgame = true;
+		endgame_ = true;
 	}
 }
 
-void Game::GraphicInGame(GameText vie_player, GameText clé_player, GameText exit_clé_player)
+void Game::GraphicInGame(GameText life_player, GameText key_player, GameText exit_key_player)
 {
-	window.clear(sf::Color::Black);
+	window_.clear(sf::Color::Black);
 
-	map.ObjectInGame(window);
+	map_.ObjectInGame(window_);
 
-	window.draw(player.GetSprite());
+	window_.draw(player_.GetSprite());
 
-	vie_player.Draw(window);
-	clé_player.Draw(window);
-	exit_clé_player.Draw(window);
+	life_player.Draw(window_);
+	key_player.Draw(window_);
+	exit_key_player.Draw(window_);
 }
 
-void Game::GraphicEndGame(GameText gameover, GameText victory, GameText Enter)
+void Game::GraphicEndGame(GameText gameover, GameText victory, GameText enter)
 {
-	if (player.GetVie() <= 0)
+	if (player_.GetLife() <= 0)
 	{
-		window.clear(sf::Color::Black);
-		gameover.Draw(window);
-		Enter.Draw(window);
+		window_.clear(sf::Color::Black);
+		gameover.Draw(window_);
+		enter.Draw(window_);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 		{
-			if (no_pressed)
+			if (no_pressed_)
 			{
-				window.close();
+				window_.close();
 			}
 		}
 	}
-	else if (endgame)
+	else if (endgame_)
 	{
-		window.clear(sf::Color::Black);
-		victory.Draw(window);
-		Enter.Draw(window);
+		window_.clear(sf::Color::Black);
+		victory.Draw(window_);
+		enter.Draw(window_);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 		{
-			if (no_pressed)
+			if (no_pressed_)
 			{
-				window.close();
+				window_.close();
 			}
 		}
 	}

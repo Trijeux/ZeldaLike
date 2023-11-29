@@ -17,21 +17,21 @@ public:
 	void GameLoop();
 	void Move();
 	void Collision();
-	void GraphicInGame(GameText vie_player, GameText clé_player, GameText exit_clé_player);
-	void GraphicEndGame(GameText gameover, GameText victory, GameText Enter);
+	void GraphicInGame(GameText life_player, GameText key_player, GameText exit_key_player);
+	void GraphicEndGame(GameText gameover, GameText victory, GameText enter);
 	
 
 
 private:
-	sf::RenderWindow window;
+	sf::RenderWindow window_;
 
-	bool no_pressed = true;
+	bool no_pressed_ = true;
 
-	Player player;
-	Map map;
+	Player player_;
+	Map map_;
 
-	int level = 1;
-	bool chargement = true;
-	bool endgame = false;
+	int level_ = 1;
+	bool loading_ = true;
+	bool endgame_ = false;
 };
 

@@ -6,17 +6,17 @@ void Player::SetTilePlayerCoord(char axe, char PorN, int num)
 	{
 		if (PorN == '+')
 		{
-			tile_player_Coord.x += num;
-			MovePlayer(right);
+			sprite_player_Coord_.x += num;
+			MovePlayer(kRight);
 		}
 		else if(PorN == '-')
 		{
-			tile_player_Coord.x -= num;
-			MovePlayer(left);
+			sprite_player_Coord_.x -= num;
+			MovePlayer(kLeft);
 		}
 		else if(PorN == '=')
 		{
-			tile_player_Coord.x = num;
+			sprite_player_Coord_.x = num;
 			
 		}
 	}
@@ -24,66 +24,66 @@ void Player::SetTilePlayerCoord(char axe, char PorN, int num)
 	{
 		if (PorN == '+')
 		{
-			tile_player_Coord.y += num;
-			MovePlayer(down);
+			sprite_player_Coord_.y += num;
+			MovePlayer(kDown);
 		}
 		else if (PorN == '-')
 		{
-			tile_player_Coord.y -= num;
-			MovePlayer(up);
+			sprite_player_Coord_.y -= num;
+			MovePlayer(kUp);
 		}
 		else if (PorN == '=')
 		{
-			tile_player_Coord.y = num;
+			sprite_player_Coord_.y = num;
 		}
 	}
 }
 
-void Player::SetClé(char PorN, int num)
+void Player::SetKey(char PorN, int num)
 {
 	if (PorN == '+')
 	{
-		num_clé += num;
+		num_key_ += num;
 	}
 	else if (PorN == '-')
 	{
-		num_clé -= num;
+		num_key_ -= num;
 	}
 	else if (PorN == '=')
 	{
-		num_clé = num;
+		num_key_ = num;
 	}
 }
 
-void Player::SetExitClé(char PorN, int num)
+void Player::SetExitKey(char PorN, int num)
 {
 	if (PorN == '+')
 	{
-		num_exit_clé += num;
+		num_exit_key_ += num;
 	}
 	else if (PorN == '-')
 	{
-		num_exit_clé -= num;
+		num_exit_key_ -= num;
 	}
 	else if (PorN == '=')
 	{
-		num_exit_clé = num;
+		num_exit_key_ = num;
 	}
 }
 
-void Player::SetVie(char PorN, int num)
+void Player::SetLife(char PorN, int num)
 {
 	if (PorN == '+')
 	{
-		vie += num;
+		life_ += num;
 	}
 	else if (PorN == '-')
 	{
-		vie -= num;
+		life_ -= num;
 	}
 	else if (PorN == '=')
 	{
-		vie = num;
+		life_ = num;
 	}
 }
 
@@ -93,25 +93,25 @@ void Player::LoadPlayer()
 	down_.loadFromFile("Sprite\\Player\\hero1.png");
 	left_.loadFromFile("Sprite\\Player\\hero3.png");
 	right_.loadFromFile("Sprite\\Player\\hero4.png");
-	tile_player.setTexture(down_);
-	tile_player.setScale(2, 2);
-	tile_player.setOrigin(tile_player.getScale().x + 5.5, tile_player.getScale().y + 5);
+	sprite_player_.setTexture(down_);
+	sprite_player_.setScale(2, 2);
+	sprite_player_.setOrigin(sprite_player_.getScale().x + 5.5, sprite_player_.getScale().y + 5);
 }
 
 void Player::MovePlayer(int num)
 {
-	if (num == up)
+	if (num == kUp)
 	{
-		tile_player.setTexture(up_);
+		sprite_player_.setTexture(up_);
 	}
-	if (num == down || num == spawnMove)
+	if (num == kDown || num == kSpawnMove)
 	{
-		tile_player.setTexture(down_);
+		sprite_player_.setTexture(down_);
 	}
-	if (num == left) {
-		tile_player.setTexture(left_);
+	if (num == kLeft) {
+		sprite_player_.setTexture(left_);
 	}
-	if (num == right) {
-		tile_player.setTexture(right_);
+	if (num == kRight) {
+		sprite_player_.setTexture(right_);
 	}
 }
