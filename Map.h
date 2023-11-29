@@ -9,7 +9,7 @@
 class Player;
 class GameText;
 
-enum block
+enum Block
 {
 	kSole = 0,
 	kMur = 1,

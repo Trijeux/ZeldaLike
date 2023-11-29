@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-enum move
+enum Move
 {
 	kUp = 1,
 	kDown = 2,

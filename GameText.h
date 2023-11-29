@@ -20,10 +20,10 @@ public:
 		text_.setFillColor(sf::Color::White);
 	}
 	
-	void Draw(sf::RenderWindow& window_)
+	void Draw(sf::RenderWindow& window)
 	{
 		if (to_display_)
-			window_.draw(text_);
+			window.draw(text_);
 	}
 	
 	void On()
