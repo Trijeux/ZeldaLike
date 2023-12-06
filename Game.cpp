@@ -1,5 +1,8 @@
 #include "Game.h"
 
+#include <iostream>
+#include <valarray>
+
 #include "Map.h"
 
 Game::Game()
@@ -8,6 +11,10 @@ Game::Game()
 	window_.setVerticalSyncEnabled(true);
 	window_.setFramerateLimit(30);
 	player_.LoadPlayer();
+	view_player_.setSize(window_.getSize().x, window_.getSize().y);
+	view_player_.zoom(0.2f);
+	view_HUD_map_.setSize(window_.getSize().x, window_.getSize().y);
+	window_.setView(view_player_);
 }
 
 void Game::GameLoop()
@@ -20,7 +27,6 @@ void Game::GameLoop()
 			map_.LoadMap(level_);
 			loading_ = false;
 		}
-
 
 
 		std::string num_life = std::to_string(player_.GetLife());
@@ -36,12 +42,18 @@ void Game::GameLoop()
 		GameText Enter("Appuyez sur Enter pour quitter", 320, 450);
 		Enter.GetSize(1.5, 1.5);
 
-		//Met la position du joueur sur le plateau
+
 		player_.SetShapePosition();
+
+		if ((!endgame_ || !(player_.GetLife() >= 0)) && zoom_)
+		{
+			view_player_.setCenter(player_.GetTilePlayerCoord().x * 50 + 25, player_.GetTilePlayerCoord().y * 50 + 25);
+			window_.setView(view_player_);
+		}
 
 		player_.PrevCoordInCoord();
 
-		Move();
+		KeyPressed();
 
 		Collision();
 
@@ -68,7 +80,7 @@ void Game::GameLoop()
 	}
 }
 
-void Game::Move()
+void Game::KeyPressed()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
@@ -102,9 +114,22 @@ void Game::Move()
 			no_pressed_ = false;
 		}
 	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		if (no_pressed_)
+		{
+			window_.setView(view_HUD_map_);
+			zoom_ = false;
+			no_pressed_ = false;
+		}
+	}
 	else
 	{
 		no_pressed_ = true;
+		if (!zoom_)
+		{
+			zoom_ = true;
+		}
 	}
 }
 
@@ -150,7 +175,7 @@ void Game::Collision()
 		map_.TurnsIntoExitOpenDoor(0, 10);
 	}
 
-	
+
 
 	if ((player_.GetTilePlayerCoord().x == 19 && player_.GetTilePlayerCoord().y == 9) || (player_.GetTilePlayerCoord().x == 19 && player_.GetTilePlayerCoord().y == 10))
 	{
@@ -186,24 +211,20 @@ void Game::GraphicInGame(GameText life_player, GameText key_player, GameText exi
 
 void Game::GraphicEndGame(GameText gameover, GameText victory, GameText enter)
 {
-	if (player_.GetLife() <= 0)
+	if (player_.GetLife() <= 0 || endgame_)
 	{
 		window_.clear(sf::Color::Black);
-		gameover.Draw(window_);
-		enter.Draw(window_);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		if (player_.GetLife() <= 0)
 		{
-			if (no_pressed_)
-			{
-				window_.close();
-			}
+			gameover.Draw(window_);
+			endgame_ = true;
 		}
-	}
-	else if (endgame_)
-	{
-		window_.clear(sf::Color::Black);
-		victory.Draw(window_);
+		else
+		{
+			victory.Draw(window_);
+		}
 		enter.Draw(window_);
+		window_.setView(view_HUD_map_);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
 		{
 			if (no_pressed_)

@@ -25,7 +25,14 @@ public:
 		if (to_display_)
 			window.draw(text_);
 	}
-	
+
+	void SetPosition(float x, float y)
+	{
+		text_.setPosition(x,y);
+	}
+
+	sf::Vector2f GetPosition() { return text_.getPosition(); }
+
 	void On()
 	{
 		to_display_ = true;
