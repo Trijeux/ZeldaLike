@@ -1,9 +1,13 @@
 # ZeldaLike
 
 Arrow Up = Up
+
 Arrow Down = Down
+
 Arrow Right = Right
+
 Arrow Left = Left
+
 Space = Veiw All Map and HUD
 
 We cannot make two movements 
