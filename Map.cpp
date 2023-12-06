@@ -96,28 +96,6 @@ void Map::TurnsIntoExitOpenDoor(int x, int y)
 	tilemap[y * TILEMAP_WIDTH + x] = kOpenExitDoor;
 }
 
-//void Map::SaveMap(int level_)
-//{
-//	if (level_ == 1)
-//	{
-//		FILE* f = _fsopen("level_.data", "wb", _SH_DENYWR);
-//		fwrite(tilemap, sizeof(tilemap), 1, f);
-//		fclose(f);
-//	}
-//	else if (level_ == 2)
-//	{
-//		FILE* f = _fsopen("level2.data", "wb", _SH_DENYWR);
-//		fwrite(tilemap, sizeof(tilemap), 1, f);
-//		fclose(f);
-//	}
-//	else if (level_ == 3)
-//	{
-//		FILE* f = _fsopen("level3.data", "wb", _SH_DENYWR);
-//		fwrite(tilemap, sizeof(tilemap), 1, f);
-//		fclose(f);
-//	}
-//}
-
 void Map::TurnsIntoSoil(int x, int y)
 {
 	tilemap[y * TILEMAP_WIDTH + x] = kSole;
