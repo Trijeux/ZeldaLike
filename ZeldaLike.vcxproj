@@ -34,6 +34,7 @@
     <Font Include="datas\fonts\Violin.otf" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="level.data" />
     <None Include="level2.data" />
     <None Include="level3.data" />

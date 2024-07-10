@@ -204,6 +204,7 @@ void Game::GraphicInGame(GameText life_player, GameText key_player, GameText exi
 
 	window_.draw(player_.GetSprite());
 
+	window_.setView(view_HUD_map_);
 	life_player.Draw(window_);
 	key_player.Draw(window_);
 	exit_key_player.Draw(window_);

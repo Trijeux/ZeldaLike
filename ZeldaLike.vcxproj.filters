@@ -57,5 +57,6 @@
     <None Include="level3.data">
       <Filter>Fichiers de ressources</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>
